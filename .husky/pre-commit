@@ -1,1 +1,2 @@
+cd ch1
 npx lint-staged
