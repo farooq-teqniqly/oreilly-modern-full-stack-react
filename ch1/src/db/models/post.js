@@ -28,7 +28,14 @@ const postSchema = new Schema(
         message: "`contents` is required",
       },
     },
-    tags: [String],
+    tags: {
+      type: [String],
+      required: false,
+      validate: {
+        validator: (v) => v.every((tag) => validateString(tag)),
+        message: "`tags` is required",
+      },
+    },
   },
   { timestamps: true },
 );

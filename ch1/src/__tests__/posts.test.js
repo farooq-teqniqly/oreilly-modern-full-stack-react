@@ -167,4 +167,30 @@ describe("creating posts", () => {
       }
     }
   });
+
+  test("with invalid tag values should fail", async () => {
+    const invalidTags = ["", "  "];
+
+    const post = {
+      title: "Hello Mongoose!",
+      author: "Daniel Bugl",
+      contents: "This post is stored in a MongoDB database using Mongoose.",
+      tags: [],
+    };
+
+    for (const tag of invalidTags) {
+      let failed = true;
+      post.tags.push(tag);
+
+      try {
+        await createPost(post);
+        failed = false;
+      } catch (err) {
+        expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+        expect(err.message).toContain("`tags` is required");
+      } finally {
+        expect(failed).toBe(true);
+      }
+    }
+  });
 });
