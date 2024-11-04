@@ -1,12 +1,12 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { GenericContainer } from "testcontainers";
+
+const MONGOPORT = 27017;
 
 export default async function globalSetup() {
-  const instance = await MongoMemoryServer.create({
-    binary: {
-      version: "6.0.4",
-    },
-  });
+  const mongoContainer = await new GenericContainer("mongo:6.0.4")
+    .withExposedPorts(MONGOPORT)
+    .start();
 
-  global.__MONGOINSTANCE = instance;
-  process.env.DATABASE_URL = instance.getUri();
+  global.__MONGOCONTAINER = mongoContainer;
+  process.env.DATABASE_URL = `mongodb://${mongoContainer.getHost()}:${mongoContainer.getMappedPort(MONGOPORT)}/blog`;
 }
