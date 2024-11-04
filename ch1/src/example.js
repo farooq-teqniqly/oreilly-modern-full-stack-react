@@ -10,7 +10,14 @@ const post = new Post({
   tags: ["mongoose", "node.js", "javascript"],
 });
 
-await post.save();
+const newPost = await post.save();
+
+await Post.findByIdAndUpdate(newPost._id, {
+  $set: {
+    title:
+      "Creating a full-stack app using MongoDB, Express, React, and Node.js (Part 2)",
+  },
+});
 
 const posts = await Post.find();
 console.log(posts);
