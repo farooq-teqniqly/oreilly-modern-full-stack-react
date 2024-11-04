@@ -43,11 +43,42 @@ describe("creating posts", () => {
       tags: ["mongoose", "mongodb"],
     };
 
+    let failed = true;
+
     try {
       await createPost(post);
+      failed = false;
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
       expect(err.message).toContain("`title` is required");
+    } finally {
+      expect(failed).toBe(true);
+    }
+  });
+
+  test("with invalid title values should fail", async () => {
+    const invalidTitles = ["", "   "];
+
+    const post = {
+      author: "Daniel Bugl",
+      contents: "This post is stored in a MongoDB database using Mongoose.",
+      tags: ["mongoose", "mongodb"],
+    };
+
+    for (const title of invalidTitles) {
+      let failed = true;
+
+      post.title = title;
+
+      try {
+        await createPost(post);
+        failed = false;
+      } catch (err) {
+        expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+        expect(err.message).toContain("`title` is required");
+      } finally {
+        expect(failed).toBe(true);
+      }
     }
   });
 
@@ -58,11 +89,37 @@ describe("creating posts", () => {
       tags: ["mongoose", "mongodb"],
     };
 
+    let failed = true;
+
     try {
       await createPost(post);
+      failed = false;
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
       expect(err.message).toContain("`author` is required");
+    } finally {
+      expect(failed).toBe(true);
+    }
+  });
+
+  test("with invalid author values should fail", async () => {
+    const invalidAuthors = ["", "  "];
+
+    const post = {
+      title: "Hello Mongoose!",
+      contents: "This post is stored in a MongoDB database using Mongoose.",
+      tags: ["mongoose", "mongodb"],
+    };
+
+    for (const author of invalidAuthors) {
+      post.author = author;
+
+      try {
+        await createPost(post);
+      } catch (err) {
+        expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+        expect(err.message).toContain("`author` is required");
+      }
     }
   });
 
@@ -73,11 +130,41 @@ describe("creating posts", () => {
       tags: ["mongoose", "mongodb"],
     };
 
+    let failed = true;
+
     try {
       await createPost(post);
+      failed = false;
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-      expect(err.message).toContain("`content` is required");
+      expect(err.message).toContain("`contents` is required");
+    } finally {
+      expect(failed).toBe(true);
+    }
+  });
+
+  test("with invalid content values should fail", async () => {
+    const invalidContent = ["", "  "];
+
+    const post = {
+      title: "Hello Mongoose!",
+      author: "Daniel Bugl",
+      tags: ["mongoose", "mongodb"],
+    };
+
+    for (const content of invalidContent) {
+      let failed = true;
+      post.contents = content;
+
+      try {
+        await createPost(post);
+        failed = false;
+      } catch (err) {
+        expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+        expect(err.message).toContain("`contents` is required");
+      } finally {
+        expect(failed).toBe(true);
+      }
     }
   });
 });

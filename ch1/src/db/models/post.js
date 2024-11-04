@@ -5,9 +5,27 @@ const postSchema = new Schema(
     title: {
       type: String,
       required: true,
+      validate: {
+        validator: (v) => v.trim().length > 0,
+        message: "`title` is required",
+      },
     },
-    author: String,
-    contents: String,
+    author: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (v) => v.trim().length > 0,
+        message: "`author` is required",
+      },
+    },
+    contents: {
+      type: String,
+      required: true,
+      validate: {
+        validator: (v) => v.trim().length > 0,
+        message: "`contents` is required",
+      },
+    },
     tags: [String],
   },
   { timestamps: true },
