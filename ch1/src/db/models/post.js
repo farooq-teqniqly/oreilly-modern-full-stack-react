@@ -1,12 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
+const validateString = (v) => v.trim().length > 0;
+
 const postSchema = new Schema(
   {
     title: {
       type: String,
       required: true,
       validate: {
-        validator: (v) => v.trim().length > 0,
+        validator: (v) => validateString(v),
         message: "`title` is required",
       },
     },
@@ -14,7 +16,7 @@ const postSchema = new Schema(
       type: String,
       required: true,
       validate: {
-        validator: (v) => v.trim().length > 0,
+        validator: (v) => validateString(v),
         message: "`author` is required",
       },
     },
@@ -22,7 +24,7 @@ const postSchema = new Schema(
       type: String,
       required: true,
       validate: {
-        validator: (v) => v.trim().length > 0,
+        validator: (v) => validateString(v),
         message: "`contents` is required",
       },
     },
