@@ -36,9 +36,18 @@ beforeEach(async () => {
   }
 });
 
-describe("listing post", () => {
-  test("without any filters should return all posts", async () => {
-    const posts = await listPosts();
+describe("list posts without filters", () => {
+  let posts;
+
+  beforeEach(async () => {
+    posts = await listPosts();
+  });
+
+  test("should return all posts", async () => {
     expect(posts.length).toEqual(testPosts.length);
+  });
+
+  test("and sorted by created date in descending order", () => {
+    expect(posts[0].title).toEqual(testPosts[2].title);
   });
 });
