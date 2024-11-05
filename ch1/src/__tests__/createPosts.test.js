@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
-import { beforeEach, describe, expect, test } from "@jest/globals";
+import { beforeEach, afterEach, describe, expect, test } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 
 import { createPost } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
 
 beforeEach(async () => {
+  await Post.deleteMany({});
+});
+
+afterEach(async () => {
   await Post.deleteMany({});
 });
 

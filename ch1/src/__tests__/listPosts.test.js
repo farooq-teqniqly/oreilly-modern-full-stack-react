@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "@jest/globals";
+import { afterEach, beforeEach, describe, expect, test } from "@jest/globals";
 
 import { listPosts } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
@@ -35,6 +35,10 @@ beforeEach(async () => {
     const createdPost = await newPost.save(newPost);
     createdPosts.push(createdPost);
   }
+});
+
+afterEach(async () => {
+  await Post.deleteMany({});
 });
 
 describe("list posts without filters", () => {

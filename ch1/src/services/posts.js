@@ -11,3 +11,7 @@ export async function listPosts(
 ) {
   return await Post.find(query).sort({ [sortBy]: sortOrder });
 }
+
+export async function getPost(id) {
+  return await Post.findById(id);
+}
