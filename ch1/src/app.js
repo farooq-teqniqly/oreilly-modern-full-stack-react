@@ -1,8 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+import specs from "../swaggerConfig.js";
+
 import { postsRoutes } from "./routes/posts.js";
 
 const app = express();
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use(bodyParser.json());
 postsRoutes(app);
 
