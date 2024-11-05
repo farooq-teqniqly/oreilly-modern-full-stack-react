@@ -65,3 +65,16 @@ describe("list posts with filters", () => {
     expect(posts[0].tags).toEqual(testPosts[0].tags);
   });
 });
+
+describe("sorting tests", () => {
+  test("can sort by author", async () => {
+    let posts = await listPosts(
+      {},
+      { sortBy: "author", sortOrder: "ascending" },
+    );
+    expect(posts[0].author).toEqual(testPosts[0].author);
+
+    posts = await listPosts({}, { sortBy: "author", sortOrder: "descending" });
+    expect(posts[0].author).toEqual(testPosts[2].author);
+  });
+});
