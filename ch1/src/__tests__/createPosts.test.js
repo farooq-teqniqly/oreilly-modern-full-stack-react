@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { beforeEach, describe, expect, test } from "@jest/globals";
+import { faker } from "@faker-js/faker";
 
 import { createPost } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
@@ -11,9 +12,9 @@ beforeEach(async () => {
 describe("creating posts", () => {
   test("with all parameters should succeed", async () => {
     const post = {
-      title: "Hello Mongoose!",
-      author: "Daniel Bugl",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      title: faker.lorem.sentence(),
+      author: faker.person.fullName(),
+      contents: faker.lorem.paragraph(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -27,9 +28,9 @@ describe("creating posts", () => {
 
   test("without tags should succeed", async () => {
     const post = {
-      title: "Hello Mongoose!",
-      author: "Daniel Bugl",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      title: faker.lorem.sentence(),
+      author: faker.person.fullName(),
+      contents: faker.lorem.paragraph(),
     };
 
     const createdPost = await createPost(post);
@@ -42,8 +43,8 @@ describe("creating posts", () => {
 
   test("without title should fail", async () => {
     const post = {
-      author: "Daniel Bugl",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      author: faker.person.fullName(),
+      contents: faker.lorem.paragraph(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -64,8 +65,8 @@ describe("creating posts", () => {
     const invalidTitles = ["", "   "];
 
     const post = {
-      author: "Daniel Bugl",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      author: faker.person.fullName(),
+      contents: faker.lorem.paragraph(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -88,8 +89,8 @@ describe("creating posts", () => {
 
   test("without author should fail", async () => {
     const post = {
-      title: "Hello Mongoose!",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      title: faker.lorem.sentence(),
+      contents: faker.lorem.paragraph(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -110,8 +111,8 @@ describe("creating posts", () => {
     const invalidAuthors = ["", "  "];
 
     const post = {
-      title: "Hello Mongoose!",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      title: faker.lorem.sentence(),
+      contents: faker.lorem.paragraph(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -129,8 +130,8 @@ describe("creating posts", () => {
 
   test("without content should fail", async () => {
     const post = {
-      title: "Hello Mongoose!",
-      author: "Daniel Bugl",
+      title: faker.lorem.sentence(),
+      author: faker.person.fullName(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -151,8 +152,8 @@ describe("creating posts", () => {
     const invalidContent = ["", "  "];
 
     const post = {
-      title: "Hello Mongoose!",
-      author: "Daniel Bugl",
+      title: faker.lorem.sentence(),
+      author: faker.person.fullName(),
       tags: ["mongoose", "mongodb"],
     };
 
@@ -176,9 +177,9 @@ describe("creating posts", () => {
     const invalidTags = ["", "  "];
 
     const post = {
-      title: "Hello Mongoose!",
-      author: "Daniel Bugl",
-      contents: "This post is stored in a MongoDB database using Mongoose.",
+      title: faker.lorem.sentence(),
+      author: faker.person.fullName(),
+      contents: faker.lorem.paragraph(),
       tags: [],
     };
 

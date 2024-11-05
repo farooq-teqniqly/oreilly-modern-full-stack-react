@@ -2,24 +2,25 @@ import { beforeEach, describe, expect, test } from "@jest/globals";
 
 import { listPosts } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
+import { faker } from "@faker-js/faker";
 
 const testPosts = [
   {
-    title: "Hello Mongoose!",
-    author: "Daniel Bugl",
-    contents: "This post is stored in a MongoDB database using Mongoose.",
+    title: "Post1",
+    author: "Author1",
+    contents: faker.lorem.paragraph(),
     tags: ["mongoose", "mongodb"],
   },
   {
-    title: "Hello NodeJS!",
-    author: "Farooq Mahmud",
-    contents: "This post is stored in a MongoDB database using Mongoose.",
+    title: "Post2",
+    author: "Author2",
+    contents: faker.lorem.paragraph(),
     tags: ["node"],
   },
   {
-    title: "Hello .NET!",
-    author: "John Doe",
-    contents: "This post is stored in a MongoDB database using Mongoose.",
+    title: "Post3",
+    author: "Author3",
+    contents: faker.lorem.paragraph(),
     tags: [".net", "c#"],
   },
 ];
@@ -54,7 +55,7 @@ describe("list posts without filters", () => {
 
 describe("list posts with filters", () => {
   test("returns posts filtered by author", async () => {
-    const posts = await listPosts({ author: "Farooq Mahmud" });
+    const posts = await listPosts({ author: testPosts[1].author });
     expect(posts.length).toEqual(1);
     expect(posts[0].author).toEqual(testPosts[1].author);
   });
@@ -76,5 +77,16 @@ describe("sorting tests", () => {
 
     posts = await listPosts({}, { sortBy: "author", sortOrder: "descending" });
     expect(posts[0].author).toEqual(testPosts[2].author);
+  });
+
+  test("can sort by title", async () => {
+    let posts = await listPosts(
+      {},
+      { sortBy: "title", sortOrder: "ascending" },
+    );
+    expect(posts[0].title).toEqual(testPosts[0].title);
+
+    posts = await listPosts({}, { sortBy: "title", sortOrder: "descending" });
+    expect(posts[0].title).toEqual(testPosts[2].title);
   });
 });
