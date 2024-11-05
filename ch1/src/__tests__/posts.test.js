@@ -1,8 +1,12 @@
 import mongoose from "mongoose";
-import { describe, expect, test } from "@jest/globals";
+import { beforeEach, describe, expect, test } from "@jest/globals";
 
 import { createPost } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
+
+beforeEach(async () => {
+  await Post.deleteMany();
+});
 
 describe("creating posts", () => {
   test("with all parameters should succeed", async () => {
