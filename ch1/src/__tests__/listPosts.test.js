@@ -51,3 +51,17 @@ describe("list posts without filters", () => {
     expect(posts[0].title).toEqual(testPosts[2].title);
   });
 });
+
+describe("list posts with filters", () => {
+  test("returns posts filtered by author", async () => {
+    const posts = await listPosts({ author: "Farooq Mahmud" });
+    expect(posts.length).toEqual(1);
+    expect(posts[0].author).toEqual(testPosts[1].author);
+  });
+
+  test("returns posts filtered by tag", async () => {
+    const posts = await listPosts({ tags: ["mongoose", "mongodb"] });
+    expect(posts.length).toEqual(1);
+    expect(posts[0].tags).toEqual(testPosts[0].tags);
+  });
+});
