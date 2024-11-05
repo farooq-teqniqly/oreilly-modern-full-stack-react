@@ -5,7 +5,7 @@ import { createPost } from "../services/posts.js";
 import { Post } from "../db/models/post.js";
 
 beforeEach(async () => {
-  await Post.deleteMany();
+  await Post.deleteMany({});
 });
 
 describe("creating posts", () => {
