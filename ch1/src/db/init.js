@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 
-const DATABASE_URL = process.env.DATABASE_URL;
-
 export function initDatabase() {
+  const database_url = process.env.DATABASE_URL;
+
+  if (!database_url) {
+    throw new Error("DATABASE_URL not defined");
+  }
+
   mongoose.connection.on("open", () => {
-    console.info(`Connected to database: ${DATABASE_URL}`);
+    console.info(`Connected to database: ${database_url}`);
   });
 
-  return mongoose.connect(DATABASE_URL);
+  return mongoose.connect(database_url);
 }

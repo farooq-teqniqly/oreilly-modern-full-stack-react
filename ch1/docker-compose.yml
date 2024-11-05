@@ -1,0 +1,12 @@
+services:
+  mongo_test:
+    image: mongo:6.0.4
+    ports:
+      - "27017:27017"
+    environment:
+      DATABASE_URL: "mongodb://localhost:27017/blogprod"
+    networks:
+      - prod_net
+networks:
+  prod_net:
+    driver: bridge
