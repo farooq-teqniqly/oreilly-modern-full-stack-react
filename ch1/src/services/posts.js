@@ -15,3 +15,11 @@ export async function listPosts(
 export async function getPost(id) {
   return await Post.findById(id);
 }
+
+export async function updatePost(id, { title, author, contents, tags }) {
+  return await Post.findOneAndUpdate(
+    { _id: id },
+    { $set: { title, author, contents, tags } },
+    { new: true },
+  );
+}
