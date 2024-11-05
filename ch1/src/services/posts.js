@@ -23,3 +23,7 @@ export async function updatePost(id, { title, author, contents, tags }) {
     { new: true },
   );
 }
+
+export async function deletePost(id) {
+  return await Post.deleteOne({ _id: id });
+}
