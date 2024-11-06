@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
-import specs from "../swaggerConfig.js";
+import specs from "./swaggerConfig.js";
 
 import { postsRoutes } from "./routes/posts.js";
 
