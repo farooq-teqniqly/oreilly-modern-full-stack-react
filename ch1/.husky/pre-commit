@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# npx --no-install --yes lint-staged@15.2.10
+npx --no-install --yes lint-staged@15.2.10
