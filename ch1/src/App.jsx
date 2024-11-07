@@ -1,45 +1,12 @@
-import { CreatePost } from "./components/CreatePost";
-import { PostFilter } from "./components/PostFilter";
-import { PostSorting } from "./components/PostSorting";
-import { PostList } from "./components/PostList";
-import { faker } from "@faker-js/faker";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Blog } from "./Blog";
 
-const tags = [faker.lorem.word(), faker.lorem.word(), faker.lorem.word()];
+const queryClient = new QueryClient();
 
-const posts = [
-  {
-    title: faker.lorem.sentence(),
-    author: faker.person.fullName(),
-    contents: faker.lorem.paragraph(),
-    tags: [tags[0], tags[1]],
-  },
-  {
-    title: faker.lorem.sentence(),
-    author: faker.person.fullName(),
-    contents: faker.lorem.paragraph(),
-    tags: [tags[2]],
-  },
-  {
-    title: faker.lorem.sentence(),
-    author: faker.person.fullName(),
-    contents: faker.lorem.paragraph(),
-    tags,
-  },
-];
-
-export function App() {
+export const App = () => {
   return (
-    <>
-      <div>
-        <CreatePost></CreatePost>
-      </div>
-      <div>
-        <PostFilter field="author"></PostFilter>
-        <PostSorting fields={["createdAt", "updatedAt"]}></PostSorting>
-      </div>
-      <div>
-        <PostList posts={posts}></PostList>
-      </div>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <Blog />
+    </QueryClientProvider>
   );
-}
+};
