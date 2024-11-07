@@ -23,14 +23,18 @@ const getPostTemplate = () => {
   return post;
 };
 
+const postRequest = async (post, expectedStatus = 200) => {
+  return await request(app)
+    .post("/api/v1/posts")
+    .send(post)
+    .expect("Content-Type", /json/)
+    .expect(expectedStatus);
+};
+
 describe("POST /api/v1/posts", () => {
   test("can create a new post", async () => {
     const post = getPostTemplate();
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(200);
+    const res = await postRequest(post);
 
     const createdPost = res.body;
     expect(createdPost).toEqual(expect.objectContaining(post));
@@ -44,25 +48,28 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     delete post["tags"];
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(200);
+    const res = await postRequest(post);
 
     const createdPost = res.body;
     expect(createdPost.tags).toHaveLength(0);
+  });
+
+  test("returns 400 for invalid post data", async () => {
+    const post = {};
+
+    const res = await postRequest(post, 400);
+
+    const { error } = res.body;
+    expect(error).toContain("`title` is required");
+    expect(error).toContain("`author` is required");
+    expect(error).toContain("`contents` is required");
   });
 
   test("returns 400 if author is missing", async () => {
     const post = getPostTemplate();
     delete post["author"];
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`author` is required");
   });
@@ -71,11 +78,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     post.author = "  ";
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`author` is required");
   });
@@ -84,11 +87,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     delete post["title"];
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`title` is required");
   });
@@ -97,11 +96,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     post.title = "   ";
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`title` is required");
   });
@@ -110,11 +105,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     delete post["contents"];
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`contents` is required");
   });
@@ -123,11 +114,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     post.contents = "  ";
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`contents` is required");
   });
@@ -136,11 +123,7 @@ describe("POST /api/v1/posts", () => {
     const post = getPostTemplate();
     post.tags = ["  "];
 
-    const res = await request(app)
-      .post("/api/v1/posts")
-      .send(post)
-      .expect("Content-Type", /json/)
-      .expect(400);
+    const res = await postRequest(post, 400);
 
     expect(res.body.error).toContain("`tags` is required");
   });
