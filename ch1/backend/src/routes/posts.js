@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import {
   listPosts,
   getPost,
@@ -155,7 +157,10 @@ export function postsRoutes(app) {
       const post = await createPost(req.body);
       return res.json(post);
     } catch (err) {
-      console.error("Error creating post", err);
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).json({ error: err.message });
+      }
+
       return res.status(500).end();
     }
   });
