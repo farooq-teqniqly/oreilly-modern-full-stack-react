@@ -75,7 +75,7 @@ export function postsRoutes(app) {
         return res.json(await listPosts({ tags }, { sortBy, sortOrder }));
       }
 
-      return res.json(await listPosts());
+      return res.json(await listPosts({}, { sortBy, sortOrder }));
     } catch (err) {
       console.error("Error listing posts", err);
       return res.status(500).end();
