@@ -13,12 +13,9 @@ const postSchema = new Schema(
       },
     },
     author: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "user",
       required: true,
-      validate: {
-        validator: (v) => validateString(v),
-        message: "`author` is required",
-      },
     },
     contents: {
       type: String,

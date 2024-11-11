@@ -2,20 +2,24 @@ import request from "supertest";
 import { beforeEach, afterEach, describe, expect, test } from "@jest/globals";
 import { faker } from "@faker-js/faker";
 import { Post } from "../db/models/post.js";
+import { User } from "../db/models/user.js";
 import { app } from "../app.js";
 
-beforeEach(async () => {
-  await Post.deleteMany({});
-});
+const getUserTemplate = () => {
+  const user = new User({
+    username: faker.internet.email(),
+    password: faker.internet.password(),
+  });
 
-afterEach(async () => {
-  await Post.deleteMany({});
-});
+  return user;
+};
+
+let userId;
 
 const getPostTemplate = () => {
   const post = {
     title: faker.lorem.sentence(),
-    author: faker.person.fullName(),
+    author: userId,
     contents: faker.lorem.paragraph(),
     tags: [faker.lorem.word()],
   };
@@ -23,12 +27,30 @@ const getPostTemplate = () => {
   return post;
 };
 
+beforeEach(async () => {
+  await User.deleteMany({});
+  await Post.deleteMany({});
+  const user = getUserTemplate();
+  const createdUser = await user.save();
+  userId = createdUser._id;
+});
+
+afterEach(async () => {
+  await User.deleteMany({});
+  await Post.deleteMany({});
+});
+
 const postRequest = async (post, expectedStatus = 200) => {
-  return await request(app)
-    .post("/api/v1/posts")
-    .send(post)
-    .expect("Content-Type", /json/)
-    .expect(expectedStatus);
+  try {
+    return await request(app)
+      .post("/api/v1/posts")
+      .send(post)
+      .expect("Content-Type", /json/)
+      .expect(expectedStatus);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 describe("POST /api/v1/posts", () => {
@@ -37,8 +59,10 @@ describe("POST /api/v1/posts", () => {
     const res = await postRequest(post);
 
     const createdPost = res.body;
-    expect(createdPost).toEqual(expect.objectContaining(post));
     expect(createdPost._id).toHaveLength(24);
+    expect(createdPost.author.toString()).toEqual(userId.toString());
+    expect(createdPost.contents).toEqual(post.contents);
+    expect(createdPost.tags).toEqual(post.tags);
     expect(new Date(createdPost.createdAt)).toEqual(expect.any(Date));
     expect(new Date(createdPost.updatedAt)).toEqual(expect.any(Date));
     expect(createdPost.__v).toEqual(0);
@@ -80,7 +104,9 @@ describe("POST /api/v1/posts", () => {
 
     const res = await postRequest(post, 400);
 
-    expect(res.body.error).toContain("`author` is required");
+    expect(res.body.error).toContain(
+      "author: Cast to ObjectId failed for value",
+    );
   });
 
   test("returns 400 if title is missing", async () => {
